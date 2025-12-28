@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FizzBuzz Grid Generator</title>
+    <title>Advanced FizzBuzz Generator</title>
     <style>
-        /* CSS STYLING */
+        /* --- CSS STYLING --- */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -18,154 +18,185 @@
 
         .controls {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             margin-bottom: 30px;
-            text-align: center;
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
+            text-align: center;
         }
 
-        .input-group {
-            margin: 10px;
-            display: inline-block;
+        h2 { color: #333; margin-top: 0; }
+
+        .slider-group {
+            margin: 20px 0;
+            text-align: left;
         }
 
-        input {
-            width: 60px;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+        .slider-group label {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .slider-group input {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
         }
 
         button {
-            padding: 10px 20px;
-            margin: 10px;
-            cursor: pointer;
+            padding: 12px 24px;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
+            font-size: 1rem;
             font-weight: bold;
-            transition: 0.3s;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
         }
 
-        #generateBtn { background-color: #4CAF50; color: white; }
-        #clearBtn { background-color: #f44336; color: white; }
-        button:hover { opacity: 0.8; }
+        #generateBtn { background-color: #00b894; color: white; }
+        #clearBtn { background-color: #d63031; color: white; }
+        button:hover { transform: translateY(-2px); opacity: 0.9; }
 
-        /* RESPONSIVE GRID SYSTEM */
+        /* --- RESPONSIVE GRID --- */
         main {
             display: grid;
-            /* Creates columns based on browser width: 1 col on mobile, many on desktop */
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 15px;
+            /* auto-fill creates as many columns as will fit the screen width */
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 12px;
             width: 100%;
-            max-width: 1200px;
+            max-width: 1100px;
         }
 
-        /* DIV STYLING */
+        /* --- DIV STYLING --- */
         .fizz-item {
-            height: 100px;
+            height: 90px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            font-weight: 700;
+            transition: all 0.3s;
+            border: 2px solid transparent;
         }
 
-        /* 4 DIFFERENT CSS CLASSES */
-        .fizzbuzz { background-color: #6c5ce7; color: white; border: 2px solid #4834d4; }
-        .fizz { background-color: #fab1a0; color: #d63031; }
-        .buzz { background-color: #74b9ff; color: #0984e3; }
-        .normal { background-color: #dfe6e9; color: #2d3436; }
+        /* 4 Logic-Based Classes */
+        .fizzbuzz { background-color: #6c5ce7; color: white; border-color: #4834d4; }
+        .fizz { background-color: #ffeaa7; color: #d35400; }
+        .buzz { background-color: #81ecec; color: #0097e6; }
+        .normal { background-color: #ffffff; color: #636e72; border-color: #dfe6e9; }
+
+        /* Visual Feedback on Hover */
+        .fizz-item:hover { transform: scale(1.05); cursor: default; }
     </style>
 </head>
 <body>
 
     <div class="controls">
-    <h2>Interactive FizzBuzz</h2>
-    
-    <div class="input-group">
-        <label>Start: <span id="startDisp">1</span></label>
-        <input type="range" id="startVal" min="1" max="50" value="1">
-    </div>
-    <div class="input-group">
-        <label>End: <span id="endDisp">100</span></label>
-        <input type="range" id="endVal" min="50" max="500" value="100">
-    </div>
-    <div class="input-group">
-        <label>Fizz: <span id="fizzDisp">3</span></label>
-        <input type="range" id="fizzVal" min="2" max="10" value="3">
-    </div>
-    <div class="input-group">
-        <label>Buzz: <span id="buzzDisp">5</span></label>
-        <input type="range" id="buzzVal" min="2" max="10" value="5">
+        <h2>FizzBuzz Controls</h2>
+        
+        <div class="slider-group">
+            <label>Start: <span id="startDisp">1</span></label>
+            <input type="range" id="startInput" min="1" max="50" value="1">
+        </div>
+
+        <div class="slider-group">
+            <label>End: <span id="endDisp">100</span></label>
+            <input type="range" id="endInput" min="51" max="300" value="100">
+        </div>
+
+        <div class="slider-group">
+            <label>Fizz Value: <span id="fizzDisp">3</span></label>
+            <input type="range" id="fizzInput" min="2" max="10" value="3">
+        </div>
+
+        <div class="slider-group">
+            <label>Buzz Value: <span id="buzzDisp">5</span></label>
+            <input type="range" id="buzzInput" min="2" max="10" value="5">
+        </div>
+
+        <div class="button-group">
+            <button id="generateBtn">Generate Grid</button>
+            <button id="clearBtn">Clear All</button>
+        </div>
     </div>
 
-    <div class="button-group">
-        <button id="generateBtn">Generate Grid</button>
-        <button id="clearBtn">Clear All</button>
-    </div>
-</div>
-
-<main id="fizzMain"></main>
-
-    <main id="fizzMain"></main>
+    <main id="fizzContainer"></main>
 
     <script>
-        // JAVASCRIPT LOGIC
-        const generateBtn = document.getElementById('generateBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const mainContainer = document.getElementById('fizzMain');
+        // --- JAVASCRIPT LOGIC ---
+        const container = document.getElementById('fizzContainer');
+        
+        // 1. Function to update text labels as you slide
+        function syncLabels() {
+            document.getElementById('startDisp').innerText = document.getElementById('startInput').value;
+            document.getElementById('endDisp').innerText = document.getElementById('endInput').value;
+            document.getElementById('fizzDisp').innerText = document.getElementById('fizzInput').value;
+            document.getElementById('buzzDisp').innerText = document.getElementById('buzzInput').value;
+        }
 
-        // Event listener for generating the divs
-        generateBtn.addEventListener('click', function() {
-            // Clear existing divs before generating new ones
-            mainContainer.innerHTML = "";
+        // Add event listeners to all sliders to update labels in real-time
+        document.querySelectorAll('input[type="range"]').forEach(slider => {
+            slider.addEventListener('input', syncLabels);
+        });
 
-            // Get current values from the controls
-            const start = parseInt(document.getElementById('startVal').value);
-            const end = parseInt(document.getElementById('endVal').value);
-            const fizzNum = parseInt(document.getElementById('fizzVal').value);
-            const buzzNum = parseInt(document.getElementById('buzzVal').value);
+        // 2. Main Generation Function
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            // Always clear old divs first
+            container.innerHTML = "";
 
-            // Loop to generate divs
+            // Get current values from the sliders
+            const start = parseInt(document.getElementById('startInput').value);
+            const end = parseInt(document.getElementById('endInput').value);
+            const fizzVal = parseInt(document.getElementById('fizzInput').value);
+            const buzzVal = parseInt(document.getElementById('buzzInput').value);
+
+            // Loop from start to end
             for (let i = start; i <= end; i++) {
-                // 1. Create the element
-                const newDiv = document.createElement('div');
+                const box = document.createElement('div');
                 
-                // 2. Set unique ID
-                newDiv.id = "myid" + i;
+                // Requirement: Unique ID for every div
+                box.id = "myid" + i;
 
-                // 3. Logic for content and classes
-                if (i % fizzNum === 0 && i % buzzNum === 0) {
-                    newDiv.innerText = "FizzBuzz";
-                    newDiv.className = "fizz-item fizzbuzz";
+                // FizzBuzz logic using modulo (%)
+                if (i % fizzVal === 0 && i % buzzVal === 0) {
+                    box.innerText = "FizzBuzz";
+                    box.className = "fizz-item fizzbuzz";
                 } 
-                else if (i % fizzNum === 0) {
-                    newDiv.innerText = "Fizz";
-                    newDiv.className = "fizz-item fizz";
+                else if (i % fizzVal === 0) {
+                    box.innerText = "Fizz";
+                    box.className = "fizz-item fizz";
                 } 
-                else if (i % buzzNum === 0) {
-                    newDiv.innerText = "Buzz";
-                    newDiv.className = "fizz-item buzz";
+                else if (i % buzzVal === 0) {
+                    box.innerText = "Buzz";
+                    box.className = "fizz-item buzz";
                 } 
                 else {
-                    newDiv.innerText = i;
-                    newDiv.className = "fizz-item normal";
+                    box.innerText = i;
+                    box.className = "fizz-item normal";
                 }
 
-                // 4. Add to the main tag
-                mainContainer.appendChild(newDiv);
+                container.appendChild(box);
             }
         });
 
-        // Event listener to clear the container
-        clearBtn.addEventListener('click', function() {
-            mainContainer.innerHTML = "";
+        // 3. Clear Function
+        document.getElementById('clearBtn').addEventListener('click', function() {
+            container.innerHTML = "";
         });
+
+        // Initialize labels on page load
+        syncLabels();
     </script>
 </body>
 </html>
